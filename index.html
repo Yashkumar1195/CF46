@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CashFlow Saathi — Know your money. Plan your next move.</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body class="bg-slate-900 text-slate-800 font-sans antialiased min-h-screen">
+
+  <!-- ============================================================ -->
+  <!-- Top Presentation Bar (Ideal for Hackathon Judges)            -->
+  <!-- ============================================================ -->
+  <header class="bg-slate-950 text-white border-b border-slate-800 py-2.5 px-4 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Hackathon Brand Badge -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center font-black text-white shadow-md text-sm">
+          ₹
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-sm tracking-tight text-white">CashFlow Saathi</span>
+            <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.2 rounded">Team 46 (CF46)</span>
+            <span class="hidden sm:inline-block bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] px-2 py-0.2 rounded">Problem 1.5</span>
+          </div>
+          <p class="text-[10px] text-slate-400 hidden md:block">"Accounting tells you what happened. CashFlow Saathi helps you decide what to do next."</p>
+        </div>
+      </div>
+
+      <!-- Quick Interactive Demo Controls -->
+      <div class="flex items-center gap-2.5">
+        <!-- Language Switcher (Slide 2 #9) -->
+        <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg px-2 py-1">
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-emerald-400 mr-1.5"></i>
+          <select id="langSelect" class="bg-transparent text-xs text-white focus:outline-none cursor-pointer">
+            <option value="en" class="bg-slate-900">English</option>
+            <option value="hi" class="bg-slate-900">हिन्दी (Hindi)</option>
+            <option value="gu" class="bg-slate-900">ગુજરાતી (Gujarati)</option>
+          </select>
+        </div>
+
+        <!-- Demo Login Switcher Button -->
+        <button data-nav="login" title="Switch Demo Merchant Persona" class="px-2.5 py-1 bg-emerald-700/80 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">
+          <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+          <span>Demo Login</span>
+        </button>
+
+        <!-- Settings Quick Button -->
+        <button data-nav="settings" title="Store & Financial Settings" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1">
+          <i data-lucide="settings" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span class="hidden sm:inline">Settings</span>
+        </button>
+
+        <!-- Phone Simulator Toggle -->
+        <button id="viewModeToggle" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+          <span id="viewModeLabel" class="hidden sm:inline">Switch to Desktop View 💻</span>
+        </button>
+
+        <!-- Reset Demo State Button -->
+        <button id="btnResetData" title="Reset to Ramesh Bhai seed data" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1">
+          <i data-lucide="rotate-ccw" class="w-3 h-3 text-amber-400"></i>
+          <span class="hidden sm:inline">Reset</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- App Wrapper (Phone Simulator or Desktop View)                -->
+  <!-- ============================================================ -->
+  <div id="appSimulatorWrapper" class="phone-simulator-wrapper mobile-mode">
+
+    <!-- Smartphone Notch (visible in mobile simulator mode) -->
+    <div id="phoneNotch" class="phone-notch">
+      <div class="phone-camera"></div>
+      <div class="phone-speaker"></div>
+    </div>
+
+    <!-- Main Container Inside Phone Screen -->
+    <div class="min-h-screen flex flex-col bg-slate-50 relative">
+
+      <!-- Status Bar Area (Padding for Notch) -->
+      <div class="h-8 bg-white border-b border-slate-100 flex items-center justify-between px-6 text-[11px] font-bold text-slate-600 select-none pt-1">
+        <span>9:41</span>
+        <div class="flex items-center gap-1.5 text-slate-500">
+          <i data-lucide="signal" class="w-3 h-3"></i>
+          <i data-lucide="wifi" class="w-3 h-3"></i>
+          <i data-lucide="battery" class="w-3.5 h-3.5 text-emerald-600"></i>
+        </div>
+      </div>
+
+      <!-- App Top Navigation Header -->
+      <div class="bg-white border-b border-slate-200/80 px-4 py-2.5 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+        <div class="flex items-center gap-2.5 cursor-pointer group" onclick="app.switchTab('settings')" title="Click to view Store Settings">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white font-extrabold shadow-sm text-base group-hover:scale-105 transition-transform">
+            ₹
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h1 id="headerGreeting" class="text-sm font-black text-slate-900 leading-tight">Namaste, Ramesh Bhai</h1>
+              <i data-lucide="settings" class="w-3 h-3 text-slate-400 group-hover:text-emerald-600 transition-colors"></i>
+            </div>
+            <p id="headerSubGreeting" class="text-[11px] text-slate-500 font-medium">Your business, your control.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <!-- Quick Soundbox Simulate Inflow -->
+          <button id="btnSimulateUPI" title="Test Simulated UPI Payment" class="p-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-xl text-xs font-bold flex items-center gap-1 border border-emerald-200 shadow-xs">
+            <i data-lucide="qr-code" class="w-4 h-4"></i>
+            <span class="text-[10px] hidden sm:inline">+₹500</span>
+          </button>
+
+          <!-- Settings Cog in Mobile Header -->
+          <button data-nav="settings" title="Settings" class="p-2 bg-slate-50 text-slate-600 hover:bg-slate-100 rounded-xl border border-slate-200">
+            <i data-lucide="sliders" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Secondary Desktop Navigation Pills (Visible in Desktop Mode) -->
+      <div class="desktop-nav-bar hidden bg-white border-b border-slate-200 px-4 py-2 flex-wrap gap-2 text-xs font-semibold">
+        <button data-nav="home" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-emerald-600 font-bold">Home</button>
+        <button data-nav="transactions" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-600">Transactions</button>
+        <button data-nav="restock" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-600">Smart Restock</button>
+        <button data-nav="forecast" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-600">7-Day Forecast</button>
+        <button data-nav="askSaathi" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-600">Ask Saathi 🤝</button>
+        <button data-nav="schemes" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-600">Govt Schemes</button>
+        <button data-nav="reconcile" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-600">Bank & UPI</button>
+        <button data-nav="audit" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-600">Audit Trail</button>
+        <button data-nav="settings" class="px-3 py-1 rounded-lg hover:bg-slate-100 text-slate-700 font-bold border border-slate-200">Settings ⚙️</button>
+        <button data-nav="login" class="px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">Demo Login 👤</button>
+      </div>
+
+      <!-- Main Dynamic Content Container -->
+      <main id="mainTabContent" class="flex-1 p-4 overflow-y-auto">
+        <!-- Rendered reactively by js/app.js -->
+      </main>
+
+      <!-- ============================================================ -->
+      <!-- Bottom Navigation Bar (Slide 2 Mockup: Home, Transactions, Restock, Ask Saathi, Settings) -->
+      <!-- ============================================================ -->
+      <nav class="bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around shadow-lg">
+        <button data-nav="home" class="flex flex-col items-center gap-1 text-emerald-600 font-bold transition-transform active:scale-95">
+          <i data-lucide="home" class="w-5 h-5"></i>
+          <span class="text-[10px]">Home</span>
+        </button>
+
+        <button data-nav="transactions" class="flex flex-col items-center gap-1 text-slate-500 hover:text-emerald-600 transition-transform active:scale-95">
+          <i data-lucide="receipt" class="w-5 h-5"></i>
+          <span class="text-[10px]">Transactions</span>
+        </button>
+
+        <button data-nav="restock" class="flex flex-col items-center gap-1 text-slate-500 hover:text-emerald-600 transition-transform active:scale-95">
+          <i data-lucide="package" class="w-5 h-5"></i>
+          <span class="text-[10px]">Restock</span>
+        </button>
+
+        <button data-nav="askSaathi" class="flex flex-col items-center gap-1 text-slate-500 hover:text-emerald-600 transition-transform active:scale-95">
+          <i data-lucide="message-square" class="w-5 h-5"></i>
+          <span class="text-[10px]">Ask Saathi</span>
+        </button>
+
+        <button data-nav="settings" class="flex flex-col items-center gap-1 text-slate-500 hover:text-emerald-600 transition-transform active:scale-95">
+          <i data-lucide="settings" class="w-5 h-5"></i>
+          <span class="text-[10px]">Settings</span>
+        </button>
+      </nav>
+
+      <!-- Home Indicator bar (in mobile simulator mode) -->
+      <div id="phoneHomeBar" class="phone-home-indicator"></div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: Add Transaction (Sale, Expense, Khata Credit, Supplier) -->
+  <!-- ============================================================ -->
+  <div id="addTransactionModal" class="modal-backdrop hidden fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl p-5 w-full max-w-sm shadow-2xl space-y-4 border border-slate-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm">Add New Transaction</h3>
+        </div>
+        <button data-close-modal class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="addTransactionForm" class="space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Transaction Type</label>
+          <select name="type" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none font-medium">
+            <option value="income">Daily Sales / Customer Payment (Income)</option>
+            <option value="expense">Shop Expense / Supplier Bill (Expense)</option>
+            <option value="receivable">Customer Credit / Khata (Receivable)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Amount (₹ INR)</label>
+          <input type="number" name="amount" required placeholder="e.g. 1500" min="1" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none font-bold text-slate-900" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Payment Method</label>
+            <select name="method" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none font-medium">
+              <option value="cash">Cash (Instant)</option>
+              <option value="upi">UPI (Instant)</option>
+              <option value="card">Card (T+1 Settle)</option>
+              <option value="bank">Bank Transfer (T+2)</option>
+              <option value="credit">Khata Credit</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Category</label>
+            <input type="text" name="category" required placeholder="Tea Sales, Milk, etc." class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Party / Customer (Optional)</label>
+          <input type="text" name="party" placeholder="e.g. Walk-in, Joshi Kaka, Amul" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Notes / Description</label>
+          <input type="text" name="description" placeholder="Short memo for audit log" class="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="button" data-close-modal class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md">
+            Save & Recompute
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts in dependency order -->
+  <script src="js/seed.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/audit.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/askSaathi.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+/**
+ * CashFlow Saathi - Custom Fintech Styling & Animations
+ * Team 46 | Kalpvruksh 2.0 Mini Hackathon
+ */
+
+/* Phone Frame Simulator (Toggleable for judge presentation) */
+.phone-simulator-wrapper {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.phone-simulator-wrapper.mobile-mode {
+  max-width: 420px;
+  margin: 1.5rem auto;
+  border-radius: 46px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35), 0 0 0 12px #1e293b, 0 0 0 15px #334155;
+  overflow: hidden;
+  background-color: #f8fafc;
+  min-height: 860px;
+  position: relative;
+}
+
+.phone-simulator-wrapper.desktop-mode {
+  max-width: 100%;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Simulated Smartphone Notch */
+.phone-notch {
+  width: 150px;
+  height: 24px;
+  background-color: #1e293b;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.phone-speaker {
+  width: 44px;
+  height: 4px;
+  background-color: #475569;
+  border-radius: 2px;
+}
+
+.phone-camera {
+  width: 8px;
+  height: 8px;
+  background-color: #0f172a;
+  border: 1.5px solid #334155;
+  border-radius: 50%;
+}
+
+/* Home Indicator Bar */
+.phone-home-indicator {
+  width: 130px;
+  height: 5px;
+  background-color: #94a3b8;
+  border-radius: 3px;
+  margin: 8px auto 4px auto;
+}
+
+/* Fintech Glass Cards */
+.fintech-card {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -2px rgba(15, 23, 42, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fintech-card:hover {
+  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 10px -4px rgba(15, 23, 42, 0.04);
+}
+
+/* Circular Health Score */
+.health-gauge-circle {
+  transition: stroke-dashoffset 0.8s ease-in-out;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Pulse animation for Cash Pressure Alert */
+@keyframes alertPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.35);
+  }
+}
+
+.shortage-pulse {
+  animation: alertPulse 2.5s infinite ease-in-out;
+}
+
+/* Soundbox audio wave animation */
+@keyframes soundWave {
+  0%, 100% { height: 6px; }
+  50% { height: 22px; }
+}
+
+.wave-bar {
+  animation: soundWave 0.8s infinite ease-in-out;
+}
+.wave-bar:nth-child(2) { animation-delay: 0.15s; }
+.wave-bar:nth-child(3) { animation-delay: 0.3s; }
+.wave-bar:nth-child(4) { animation-delay: 0.45s; }
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Tab Active underline */
+.nav-tab-active {
+  color: #059669 !important;
+  font-weight: 600;
+  border-bottom: 2px solid #059669;
+}
+
+/* Chat bubble styling */
+.chat-bubble-user {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble-bot {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
